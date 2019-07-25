@@ -1,11 +1,11 @@
 {
   "name": "wobbly",
   "version": "1.0.0",
-  "description": "",
+  "description": "destinationFolder",
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
   "scripts": {
-    
+    "build": "node ./build.js -w"
   },
   "author": "imtaotao",
   "license": "ISC"
