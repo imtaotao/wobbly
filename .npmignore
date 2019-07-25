@@ -1,0 +1,5 @@
+.gitignore
+.npmignore
+
+index.js
+build.js

@@ -1,0 +1,12 @@
+{
+  "name": "wobbly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/wobbly.common.js",
+  "module": "dist/wobbly.esm.js",
+  "scripts": {
+    
+  },
+  "author": "imtaotao",
+  "license": "ISC"
+}
