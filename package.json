@@ -1,12 +1,24 @@
 {
-  "name": "wobbly",
-  "version": "1.0.0",
+  "name": "@rustle/wobbly",
+  "version": "0.0.1",
   "description": "destinationFolder",
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
   "scripts": {
-    "build": "node ./build.js -w"
+    "build": "node ./build.js -w",
+    "publish": "node ./build.js && npm version major"
   },
   "author": "imtaotao",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matt-Esch/virtual-dom/issues",
+    "email": "dwchentao@163.com"
+  },
+  "keywords": [
+    "wobbly",
+    "animate",
+    "animation"
+  ],
+  "homepage": "https://github.com/imtaotao/wobbly",
+  "repository": "git@github.com:imtaotao/wobbly.git"
 }

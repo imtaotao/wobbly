@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const libName = require('./package.json').name
+const libName = 'wobbly'
 const entryFilePath = path.resolve('./index.js')
 const destinationFolder = path.resolve('./dist')
 
