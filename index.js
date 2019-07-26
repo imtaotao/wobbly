@@ -157,5 +157,9 @@ const Wobbly = (() => {
     return allApis
   }
 
+  WobblyCore.move = (move, duration, process) => {
+    return WobblyCore({move, duration}, process)
+  }
+
   return WobblyCore
 })()

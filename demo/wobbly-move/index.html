@@ -1,0 +1,20 @@
+<template>
+  <div styleName='container'>
+    move
+  </div>
+</template>
+
+<script>
+const style = require('./style.css')
+const { CSSModules, Component } = require('@Grass')
+
+module.exports = CSSModules(style)(
+  class WobblyMove extends Component {
+    // #temp
+
+    beforeCreate() {
+      this.state = {}
+    }
+  }
+)
+</script>

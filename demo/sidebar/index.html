@@ -1,0 +1,90 @@
+<template>
+  <div styleName='container'>
+    <ul styleName='items' className='center'>
+      <li
+        className='center'
+        v-for='(val, i) of items'
+        @click='this.choseItem.bind(this, i)'
+        :styleName='active === i ? "active" : ""'
+        v-position='{position: this.getPosition.bind(this), i}'
+      >
+        <span>{{ val }}</span>
+      </li>
+    </ul>
+    <div
+      styleName='line'
+      v-line  
+    ></div>
+  </div>
+</template>
+
+<script>
+const style = require('./style.css')
+const wobbly = require('@wobbly')
+const { CSSModules, Component, directive } = require('@Grass')
+
+let lineNode = null
+directive('line', dom => lineNode = dom)
+
+directive('position', (dom, val) => {
+  setTimeout(() => {
+    const left = dom.offsetLeft
+    const width = parseInt(getComputedStyle(dom).width || 0)
+    val.position(val.i, left + (width / 2 - 20))
+  })
+})
+
+module.exports = CSSModules(style)(
+  class Sidebar extends Component {
+    // #temp
+
+    animate = null
+
+    listPosition = []
+
+    state = {
+      active: 0,
+      items: ['Wobbly', 'Wobbly.move', 'Wobbly.all', 'Wobbly.color']
+    }
+
+    created () {
+      setTimeout(() => {
+        if (lineNode) {
+          const left = this.listPosition[0]
+          lineNode.style.left = left + 'px'
+        }
+      })
+    }
+
+    choseItem (i) {
+      if (i !== this.state.active){
+        this.moveLine(i)
+        this.setState({ active: i })
+        this.props.onToggleItem(this.state.items[i])
+      }
+    }
+
+    getPosition (i, position) {
+      this.listPosition[i] = position
+    }
+
+    moveLine (index) {
+      const end = this.listPosition[index]
+      const start = this.listPosition[this.state.active]
+  
+      if (this.animate) {
+        this.animate.stop()
+      }
+
+      if (lineNode) {
+        this.animate = wobbly({
+          duration: 1000,
+          move: [start, end],
+        }, v => lineNode.style.left = v + 'px')
+
+        this.animate.start()
+      }
+    }
+  }
+)
+</script>

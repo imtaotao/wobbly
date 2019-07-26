@@ -1,0 +1,33 @@
+.container {
+  width: 80%;
+  margin:  0 auto;
+  background: #fff;
+  border-radius: 5px;
+  position: relative;
+}
+
+.items li {
+  height: 50px;
+  color: #c2dfe7;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 40px;
+  cursor: pointer;
+}
+
+.items li:hover {
+  color: #046d8a;
+}
+
+.active {
+  color: #046d8a !important;
+}
+
+.line {
+  width: 40px;
+  height: 3px;
+  border-radius: 15px;
+  background: #fbaf3f;
+  position: absolute;
+  bottom: 5px;
+}

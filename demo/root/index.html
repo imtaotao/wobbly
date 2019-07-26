@@ -1,0 +1,48 @@
+<template>
+  <div styleName='container'>
+    <a
+      target='_blank'
+      styleName='lib-name'
+      href='https://github.com/imtaotao/wobbly'
+    >
+    </a>
+    <!-- 侧边栏 -->
+    <Sidebar :onToggleItem='this.onToggleItem' />
+
+    <!-- 主体内容 -->
+    <div styleName='main-box'>
+      <WobblyCM v-show='currentAPI === "Wobbly"' />
+      <WobblyAll v-show='currentAPI === "Wobbly.all"' />
+      <WobblyMove v-show='currentAPI === "Wobbly.move"' />
+      <WobblyColor v-show='currentAPI === "Wobbly.color"' />
+    </div>
+  </div>
+</template>
+
+<script>
+const style = require('./style.css')
+const Sidebar = require('../sidebar/index')
+const WobblyCM = require('../wobbly/index')
+const { async, CSSModules, Component } = require('@Grass')
+
+class Root extends Component {
+  // #temp
+  component = {
+    Sidebar,
+    WobblyCM,
+    WobblyAll: async(() => require.async('../wobbly-all/index')),
+    WobblyMove: async(() => require.async('../wobbly-move/index')),
+    WobblyColor: async(() => require.async('../wobbly-color/index'))
+  }
+
+  state = {
+    currentAPI: 'Wobbly'
+  }
+
+  onToggleItem = item => {
+    this.setState({ currentAPI: item })
+  }
+}
+
+CSSModules(style)(Root).$mount(document.getElementById('App'))
+</script>
