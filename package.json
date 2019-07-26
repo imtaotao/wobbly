@@ -5,6 +5,7 @@
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
   "scripts": {
+    "demo": "http-server ./ -o",
     "build": "node ./build.js -w",
     "publish": "node ./build.js && npm version major"
   },
