@@ -1,19 +1,55 @@
 <template>
   <div styleName='container'>
-    color
+    <div
+      className='center'
+      styleName='title-btns'
+    >
+      <div
+        className='center'
+        @click='this.toggle.bind(this, false)'
+        :styleName='!isShowSourcecode ? "active" : ""'
+      >animation</div>
+      <div
+        className='center'
+        @click='this.toggle.bind(this, true)'
+        :styleName='isShowSourcecode ? "active" : ""'
+      >sourcecode</div>
+    </div>
+    <div
+      styleName='box'
+      v-transition='"slide"'
+      v-show='!isShowSourcecode'
+    >
+      animation
+    </div>
+    <div
+      styleName='box'
+      v-transition='"slide"'
+      v-show='isShowSourcecode'
+    >
+      sourcecode
+    </div>
   </div>
 </template>
 
 <script>
-const style = require('./style.css')
+const style = require('../common.css')
 const { CSSModules, Component } = require('@Grass')
 
 module.exports = CSSModules(style)(
-  class WobblyColor extends Component {
+  class WobblyAll extends Component {
     // #temp
 
     beforeCreate() {
-      this.state = {}
+      this.state = {
+        isShowSourcecode: false,
+      }
+    }
+
+    toggle (show) {
+      if (this.state.isShowSourcecode !== show) {
+        this.setState({ isShowSourcecode: show })
+      }
     }
   }
 )

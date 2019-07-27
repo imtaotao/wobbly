@@ -1,0 +1,36 @@
+.container {
+  height: 100%;
+}
+
+.title-btns {
+  width: 100%;
+  padding: 10px 0;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+.title-btns div {
+  width: 110px;
+  height: 30px;
+  color: #fff;
+  border-radius: 10px;
+  background:#5eacd5;
+  cursor: pointer;
+}
+
+.title-btns div:hover {
+  background: #3c7c9d;
+}
+
+.active {
+  background: #3c7c9d !important;
+}
+
+.title-btns div:first-child {
+  margin-right: 100px;
+}
+
+.box {
+  width: 100%;
+  height: calc(100% - 50px);
+  padding: 30px;
+}
