@@ -45,9 +45,8 @@ Wobbly 用于创建一个动画对象，每个动画对象包含 5 个方法
       animate.start()
     }
   }, val => {
-    node.style.left = val + 'px'
+    node.style.transform = `translateX(${val}px)`
   })
-
   animate.start()
 ```
 
@@ -60,7 +59,7 @@ Wobbly.move 方法用于简化操作，他将直接执行动画，并返回一�
 ```js
   // 这是一个执行 3 次的动画，每次持续 1s
   Wobbly.move([0, 100], 1000, val => {
-    node.style.left = val + 'px'
+    node.style.transform = `translateX(${val}px)`
   })
   .then(reStart => reStart())
   .then(reStart => reStart())
@@ -89,6 +88,7 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
     node.style.background = `rgb(${r}, ${g}, ${b})`
     node.style.transform = `scale(${scale}) translateX(${translate}px)`
   })
+  animate.start()
 ```
 
 
@@ -128,4 +128,5 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
     node.style.background = `rgb(${r}, ${g}, ${b})`
     node.style.transform = `scale(${scale}) translateX(${translate}px)`
   })
+  animate.start()
 ```

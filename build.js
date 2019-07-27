@@ -16,7 +16,7 @@ const build = (sourcecode, type) => {
     case 'common' :
       sourcecode += '\nmodule.exports = Wobbly'
       break
-    case 'browser' :
+    case 'min' :
       sourcecode += '\nwindow.Wobbly = Wobbly'
       break
   }
