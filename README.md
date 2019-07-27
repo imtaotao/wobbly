@@ -1,7 +1,7 @@
 ## Wobbly
 [![NPM version][npm-image]][npm-url]
 
-[**线上演示地址**](https://imtaotao.github.io/wobbly)<br/>
+[**线上演示地址**](https://imtaotao.github.io/wobbly)<br/><br/>
 这个是一个轻量级的 js 弹性动画库，能够帮助你轻松的创建弹性动画。几个简单的 api 就能快速上手
 
 ### [CDN][cdn] 
@@ -17,7 +17,7 @@
 Wobbly 用于创建一个动画对象，每个动画对象包含 5 个方法
 
 #### options
-  +  `move`： 移动的位置，为一个数组 [start, end]
+  +  `move`： 移动的距离，为一个数组 [start, end]
   +  `duration`： 动画持续时间
   +  `end`： 动画结束后的回调
   +  `normal`： 动画是否是使用正常匀速动画，默认 false
@@ -91,7 +91,7 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
 
 
 ### Wobbly.color(start: string | array, end: string | array) : Array<[number, number]>
-上次 Wobbly.all 方法的 demo 中我们对颜色的改变很麻烦，需要自己手动写 rgb 的值，对于 16进制的颜色值，我们还需要自己转化。这个 Wobbly.color 方法就是来帮助我们来转化的工具方法
+上面的 Wobbly.all 方法中的 demo 中我们对颜色的改变很麻烦，需要自己手动写 rgb 的值，对于 16进制的颜色值，我们还需要自己转换。这个 Wobbly.color 方法就是来帮助我们来转换的工具方法
 
 ```js
   // 以下 4 种写法都可以
