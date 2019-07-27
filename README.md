@@ -1,12 +1,9 @@
 ## Wobbly
 [![NPM version][npm-image]][npm-url]
 
-[npm-image]: https://img.shields.io/npm/v/@rustle/wobbly.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/@rustle/wobbly
-
 这个是一个轻量级的 js 弹性动画库，能够帮助你轻松的创建弹性动画。几个简单的 api 就能快速上手
 
-### CDN 
+### [CDN][cdn] 
 `<script src="https://cdn.jsdelivr.net/gh/imtaotao/wobbly/dist/wobbly.min.js"></script>`
 
 ## API
@@ -130,3 +127,7 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
   })
   animate.start()
 ```
+
+[npm-url]: https://www.npmjs.com/package/@rustle/wobbly
+[npm-image]: https://img.shields.io/npm/v/@rustle/wobbly.svg?style=flat-square
+[cdn]: https://cdn.jsdelivr.net/gh/imtaotao/wobbly/dist/wobbly.min.js

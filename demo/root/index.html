@@ -12,10 +12,10 @@
 
     <!-- 主体内容 -->
     <div styleName='main-box'>
-      <WobblyCM v-show='currentAPI === "Wobbly"' />
-      <WobblyAll v-show='currentAPI === "Wobbly.all"' />
-      <WobblyMove v-show='currentAPI === "Wobbly.move"' />
-      <WobblyColor v-show='currentAPI === "Wobbly.color"' />
+      <WobblyCM v-if='currentAPI === "Wobbly"' />
+      <WobblyAll v-if='currentAPI === "Wobbly.all"' />
+      <WobblyMove v-if='currentAPI === "Wobbly.move"' />
+      <WobblyColor v-if='currentAPI === "Wobbly.color"' />
     </div>
   </div>
 </template>

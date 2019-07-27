@@ -20,19 +20,23 @@
       v-transition='"slide"'
       v-show='!isShowSourcecode'
     >
-      animation
+      <div
+        id='Node'
+        styleName='node'
+      ></div>
     </div>
     <div
       styleName='box'
       v-transition='"slide"'
       v-show='isShowSourcecode'
     >
-      sourcecode
+      还没有写。。。😁
     </div>
   </div>
 </template>
 
 <script>
+const wobbly = require('@Wobbly')
 const style = require('../common.css')
 const { CSSModules, Component } = require('@Grass')
 
@@ -40,6 +44,8 @@ module.exports = CSSModules(style)(
   class WobblyAll extends Component {
     // #temp
 
+    node = null
+  
     beforeCreate() {
       this.state = {
         isShowSourcecode: false,
@@ -50,6 +56,43 @@ module.exports = CSSModules(style)(
       if (this.state.isShowSourcecode !== show) {
         this.setState({ isShowSourcecode: show })
       }
+    }
+
+    created (dom) {
+      setTimeout(() => {
+        const node = dom.querySelector('#Node')
+        if (node) {
+          this.node = node
+          this.start()
+        }
+      }, 1000)
+    }
+
+    async start () {
+      let other = await this.animate('x', 0, [0, 700], 1000)
+      other = await this.animate('y', other, [0, 350], 1500)
+      other = await this.animate('x', other, [700, 0], 700)
+      await this.animate('y', other, [350, 0], 1000)
+      this.start()
+    }
+
+    animate (direction, other, move, duration) {
+      return new Promise(resolve => {
+        wobbly({
+          move,
+          duration,
+          end() {
+            resolve(move[1])
+          },
+        }, val => {
+          if (direction === 'x') {
+            this.node.style.transform = `translate(${val}px, ${other}px)`
+          } else {
+            this.node.style.transform = `translate(${other}px, ${val}px)`
+          }
+        })
+        .start()
+      })
     }
   }
 )
