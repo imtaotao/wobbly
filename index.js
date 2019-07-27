@@ -4,7 +4,7 @@ const Wobbly = (() => {
       throw TypeError('The parameter should be a number.')
     }
   }
-
+  
   const wobbly = t => -0.5 * Math.pow(2.71828, -6 * t) * (-2 * Math.pow(2.71828, 6 * t) + Math.sin(12 * t) + 2 * Math.cos(12 * t))
 
   const filterOpts = opts => {
@@ -19,11 +19,35 @@ const Wobbly = (() => {
     assert(from)
     assert(duration)
     
-    if (typeof end !== 'function') {
-      end = () => {}
+    return { to, from, end, normal, duration }
+  }
+
+  const hexToRgb = hex => {
+    if (!/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6}|[0-9a-fA-f]{8})$/.test(hex)) {
+      throw Error(`the "${hex}" do not meet specifications.`)
     }
 
-    return { to, from, end, normal, duration }
+    const rgba = []
+    hex = hex.toLowerCase()
+
+    // if hex is #fff
+    if (hex.length === 4) {
+      let regenerate = '#'
+      for (let i = 1; i < 4; i++) {
+        regenerate += hex.slice(i, i + 1).repeat(2)
+      }
+      hex = regenerate
+    }
+
+    for (let j = 1; j < 7; j += 2) {
+      rgba.push(+('0x' + hex.slice(j, j + 2)))
+    }
+
+    if (hex.length === 9) {
+      rgba.push(+('0x' + hex.slice(7, 9)) / 255)
+    }
+
+    return rgba
   }
 
   // core function
@@ -40,7 +64,7 @@ const Wobbly = (() => {
       if (timerId) {
         cancelAnimationFrame(timerId)
         timerId = null
-        end()
+        typeof end === 'function' && end()
       }
     }
 
@@ -157,8 +181,38 @@ const Wobbly = (() => {
     return allApis
   }
 
+  // simplified writing
   WobblyCore.move = (move, duration, process) => {
-    return WobblyCore({move, duration}, process)
+    return new Promise(resolve => {
+      WobblyCore({
+        move,
+        duration,
+        end: resolve,
+      }, process).start()
+    })
+  }
+
+  // conversion color value
+  WobblyCore.color = (start, end) => {
+    if (typeof end === 'string') {
+      end = hexToRgb(end.trim())
+    }
+
+    if (typeof start === 'string') {
+      start = hexToRgb(start.trim())
+    }
+
+    const result = []
+    const maxLength = Math.max(start.length, end.length)
+    
+    end.length < maxLength && end.push(1)
+    start.length < maxLength && start.push(1)
+    
+    for (let i = 0; i < maxLength; i++) {
+      result[i] = [start[i], end[i]]
+    }
+
+    return result
   }
 
   return WobblyCore
