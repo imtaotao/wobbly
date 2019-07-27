@@ -1,6 +1,7 @@
 ## Wobbly
 [![NPM version][npm-image]][npm-url]
 
+[**线上演示地址**](https://imtaotao.github.io/wobbly)<br/>
 这个是一个轻量级的 js 弹性动画库，能够帮助你轻松的创建弹性动画。几个简单的 api 就能快速上手
 
 ### [CDN][cdn] 
