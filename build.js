@@ -45,8 +45,8 @@ const getSourceCode = () => {
 const start = () => {
   getSourceCode(entryFilePath).then(sourcecode => {
     build(sourcecode, 'esm')
+    build(sourcecode, 'min')
     build(sourcecode, 'common')
-    build(sourcecode, 'browser')
   })
 }
 

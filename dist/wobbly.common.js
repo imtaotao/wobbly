@@ -187,7 +187,10 @@ const Wobbly = (() => {
       WobblyCore({
         move,
         duration,
-        end: resolve,
+        end: () => {
+          // next function will restart animation
+          resolve(() => WobblyCore.move(move, duration, process))
+        },
       }, process).start()
     })
   }
@@ -202,17 +205,11 @@ const Wobbly = (() => {
       start = hexToRgb(start.trim())
     }
 
-    const result = []
     const maxLength = Math.max(start.length, end.length)
-    
     end.length < maxLength && end.push(1)
     start.length < maxLength && start.push(1)
     
-    for (let i = 0; i < maxLength; i++) {
-      result[i] = [start[i], end[i]]
-    }
-
-    return result
+    return start.map((val, i) => [val, end[i]])
   }
 
   return WobblyCore
