@@ -20,25 +20,42 @@
       v-transition='"slide"'
       v-show='!isShowSourcecode'
     >
-      还没有写。。。😁
+      <div styleName='title'>
+        This is an animation that repeats 3 times.
+        <div @click='this.restart'>restart</div>
+      </div>
+      <div
+        id='Node'
+        styleName='node-two'
+      >
+      </div>
     </div>
     <div
       styleName='box'
       v-transition='"slide"'
       v-show='isShowSourcecode'
     >
-      sourcecode
+      <div styleName='code-container'>
+        <pre
+          v-text='code'
+          styleName='code'
+          v-for='code of this.getSourcecode()'
+        ></pre>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+const wobbly = require('@Wobbly')
 const style = require('../common.css')
 const { CSSModules, Component } = require('@Grass')
 
 module.exports = CSSModules(style)(
   class WobblyAll extends Component {
     // #temp
+
+    node = null
 
     beforeCreate() {
       this.state = {
@@ -50,6 +67,44 @@ module.exports = CSSModules(style)(
       if (this.state.isShowSourcecode !== show) {
         this.setState({ isShowSourcecode: show })
       }
+    }
+
+    created (dom) {
+      setTimeout(() => {
+        const node = dom.querySelector('#Node')
+        if (node) {
+          this.node = node
+          this.sourcecode(node)
+        }
+      }, 1000)
+    }
+
+    restart = () => {
+      if (this.node) {
+        this.sourcecode(this.node)
+      }
+    }
+
+    getSourcecode () {
+      const code = this.sourcecode.toString().split('\n')
+      code.splice(0, 1)
+      code.splice(code.length - 1, 1)
+      return code
+    }
+
+    sourcecode (node) {
+      // restart animation
+      const callback = restart => {
+        return new Promise(resolve => {
+          setTimeout(() => resolve(restart()), 1000)
+        })
+      }
+
+      wobbly.move([0, -720], 500, val => {
+        node.style.transform = `rotateZ(${val}deg)`
+      })
+      .then(callback)
+      .then(callback)
     }
   }
 )
