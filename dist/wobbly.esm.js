@@ -187,7 +187,7 @@ const Wobbly = (() => {
       WobblyCore({
         move,
         duration,
-        end: () => {
+        end () {
           // next function will restart animation
           resolve(() => WobblyCore.move(move, duration, process))
         },

@@ -1,38 +1,42 @@
 <template>
   <div styleName='container'>
-    <div
-      className='center'
-      styleName='title-btns'
-    >
+    <div styleName='title-btn'>
       <div
         className='center'
-        @click='this.toggle.bind(this, false)'
-        :styleName='!isShowSourcecode ? "active" : ""'
-      >animation</div>
-      <div
-        className='center'
-        @click='this.toggle.bind(this, true)'
-        :styleName='isShowSourcecode ? "active" : ""'
-      >sourcecode</div>
+        @click='() => this.setState({ isShowSourcecode: !isShowSourcecode })'
+      >
+        {{ isShowSourcecode ? "sourcecode" : "animtaion" }}
+      </div>
     </div>
     <div
       styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='!isShowSourcecode'
     >
-      还没有写。。。😁
+      <div
+        id='Node'
+        styleName='node-two'
+      >
+      </div>
     </div>
     <div
-      styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='isShowSourcecode'
+      styleName='box sourcecode'
     >
-      sourcecode
+      <div styleName='code-container'>
+        <pre
+          v-text='code'
+          styleName='code'
+          v-for='code of this.getSourcecode()'
+        ></pre>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+const wobbly = require('@Wobbly')
 const style = require('../common.css')
 const { CSSModules, Component } = require('@Grass')
 
@@ -47,9 +51,55 @@ module.exports = CSSModules(style)(
     }
 
     toggle (show) {
-      if (this.state.isShowSourcecode !== show) {
-        this.setState({ isShowSourcecode: show })
+      this.setState({ isShowSourcecode: show })
+    }
+
+    created (dom) {
+      setTimeout(() => {
+        const node = dom.querySelector('#Node')
+        if (node) this.sourcecode(node)
+      }, 1000)
+    }
+
+    getSourcecode () {
+      const code = this.sourcecode.toString().split('\n')
+      code.splice(0, 1)
+      code.splice(code.length - 1, 1)
+      return code
+    }
+
+    sourcecode (node) {
+      let translate = [0, 400]
+      const colors = ['#0288D1', '#cf4b3d', '#43A047', '#455A64', '#6A1B9A', '#1B5E20', '#D81B60']
+      const getColors = start => {
+        const randomColor = old => {
+          const color = colors[Math.floor(Math.random() * colors.length)]
+          return color === old ? randomColor(old) : color
+        }
+        start = start || randomColor()
+        const end = randomColor(start)
+        return [start, end]
       }
+      
+      const move = start => {
+        const colors = getColors(start)
+        wobbly.all({
+          moves: [
+            translate,
+            ...wobbly.color.apply(null, colors)
+          ],
+          end () {
+            translate = translate.reverse()
+            move(colors[1])
+          },
+          duration: 2000,
+        }, ([translate, r, g, b, a = 1]) => {
+          node.style.transform = `translateX(${translate}px)`
+          node.style.background = `rgb(${r}, ${g}, ${b}, ${a})`
+        }).start()
+      }
+
+      move()
     }
   }
 )

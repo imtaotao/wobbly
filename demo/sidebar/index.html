@@ -60,7 +60,7 @@ module.exports = CSSModules(style)(
     }
 
     choseItem (i) {
-      if (i !== this.state.active){
+      if (i !== this.state.active) {
         this.moveLine(i)
         this.setState({ active: i })
         this.props.onToggleItem(this.state.items[i])

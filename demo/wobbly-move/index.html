@@ -1,23 +1,16 @@
 <template>
   <div styleName='container'>
-    <div
-      className='center'
-      styleName='title-btns'
-    >
+    <div styleName='title-btn'>
       <div
         className='center'
-        @click='this.toggle.bind(this, false)'
-        :styleName='!isShowSourcecode ? "active" : ""'
-      >animation</div>
-      <div
-        className='center'
-        @click='this.toggle.bind(this, true)'
-        :styleName='isShowSourcecode ? "active" : ""'
-      >sourcecode</div>
+        @click='() => this.setState({ isShowSourcecode: !isShowSourcecode })'
+      >
+        {{ isShowSourcecode ? "sourcecode" : "animtaion" }}
+      </div>
     </div>
     <div
       styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='!isShowSourcecode'
     >
       <div styleName='title'>
@@ -32,7 +25,7 @@
     </div>
     <div
       styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='isShowSourcecode'
     >
       <div styleName='code-container'>
@@ -60,12 +53,6 @@ module.exports = CSSModules(style)(
     beforeCreate() {
       this.state = {
         isShowSourcecode: false,
-      }
-    }
-
-    toggle (show) {
-      if (this.state.isShowSourcecode !== show) {
-        this.setState({ isShowSourcecode: show })
       }
     }
 

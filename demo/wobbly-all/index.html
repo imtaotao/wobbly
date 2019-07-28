@@ -1,38 +1,42 @@
 <template>
   <div styleName='container'>
-    <div
-      className='center'
-      styleName='title-btns'
-    >
+    <div styleName='title-btn'>
       <div
         className='center'
-        @click='this.toggle.bind(this, false)'
-        :styleName='!isShowSourcecode ? "active" : ""'
-      >animation</div>
-      <div
-        className='center'
-        @click='this.toggle.bind(this, true)'
-        :styleName='isShowSourcecode ? "active" : ""'
-      >sourcecode</div>
+        @click='() => this.setState({ isShowSourcecode: !isShowSourcecode })'
+      >
+        {{ isShowSourcecode ? "sourcecode" : "animtaion" }}
+      </div>
     </div>
     <div
       styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='!isShowSourcecode'
     >
-      还没有写。。。😁
+      <div
+        id='Node'
+        styleName='node-two'
+      >
+      </div>
     </div>
     <div
-      styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='isShowSourcecode'
+      styleName='box sourcecode'
     >
-      sourcecode
+      <div styleName='code-container'>
+        <pre
+          v-text='code'
+          styleName='code'
+          v-for='code of this.getSourcecode()'
+        ></pre>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+const wobbly = require('@Wobbly')
 const style = require('../common.css')
 const { CSSModules, Component } = require('@Grass')
 
@@ -46,10 +50,39 @@ module.exports = CSSModules(style)(
       }
     }
 
-    toggle (show) {
-      if (this.state.isShowSourcecode !== show) {
-        this.setState({ isShowSourcecode: show })
-      }
+    created (dom) {
+      setTimeout(() => {
+        const node = dom.querySelector('#Node')
+        if (node) this.sourcecode(node)
+      }, 1000)
+    }
+
+    getSourcecode () {
+      const code = this.sourcecode.toString().split('\n')
+      code.splice(0, 1)
+      code.splice(code.length - 1, 1)
+      return code
+    }
+
+    sourcecode (node) {
+      const animate = wobbly.all({
+        moves: [
+          [0, 50],    // border radius
+          [0.5, 1],   // scale
+          [0, 600],   // translate
+          ...wobbly.color('#f3b65a', '#00d2ff')   // color
+        ],
+        duration: 1500,
+        end () {
+          animate.reStart()
+        },
+      }, ([radius, scale, translate, r, g, b]) => {
+        node.style.borderRadius = `${radius}%`
+        node.style.background = `rgb(${r}, ${g}, ${b})`
+        node.style.transform = `scale(${scale}) translateX(${translate}px)`
+      })
+
+      animate.start()
     }
   }
 )
