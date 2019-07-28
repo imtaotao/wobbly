@@ -1,23 +1,16 @@
 <template>
   <div styleName='container'>
-    <div
-      className='center'
-      styleName='title-btns'
-    >
+    <div styleName='title-btn'>
       <div
         className='center'
-        @click='this.toggle.bind(this, false)'
-        :styleName='!isShowSourcecode ? "active" : ""'
-      >animation</div>
-      <div
-        className='center'
-        @click='this.toggle.bind(this, true)'
-        :styleName='isShowSourcecode ? "active" : ""'
-      >sourcecode</div>
+        @click='() => this.setState({ isShowSourcecode: !isShowSourcecode })'
+      >
+        {{ isShowSourcecode ? "sourcecode" : "animtaion" }}
+      </div>
     </div>
     <div
       styleName='box'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='!isShowSourcecode'
     >
       <div
@@ -27,9 +20,9 @@
       </div>
     </div>
     <div
-      styleName='box sourcecode'
-      v-transition='"slide"'
+      v-transition='"toggle"'
       v-show='isShowSourcecode'
+      styleName='box sourcecode'
     >
       <div styleName='code-container'>
         <pre
@@ -54,12 +47,6 @@ module.exports = CSSModules(style)(
     beforeCreate() {
       this.state = {
         isShowSourcecode: false,
-      }
-    }
-
-    toggle (show) {
-      if (this.state.isShowSourcecode !== show) {
-        this.setState({ isShowSourcecode: show })
       }
     }
 
@@ -92,7 +79,9 @@ module.exports = CSSModules(style)(
           wobbly({
             move,
             duration,
-            end() { resolve(move[1]) },
+            end() {
+              resolve(move[1])
+            },
           }, val => {
             node.style.transform = direction === 'x'
               ? `translate(${val}px, ${other}px)`

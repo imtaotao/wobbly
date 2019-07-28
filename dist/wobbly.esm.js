@@ -8,7 +8,7 @@ const Wobbly = (() => {
   const wobbly = t => -0.5 * Math.pow(2.71828, -6 * t) * (-2 * Math.pow(2.71828, 6 * t) + Math.sin(12 * t) + 2 * Math.cos(12 * t))
 
   const filterOpts = opts => {
-    let {
+    const {
       end,
       duration,
       normal = false,
@@ -73,18 +73,18 @@ const Wobbly = (() => {
         let precent = (Date.now() - startTime) / duration
         if (Number.isNaN(precent)) return
 
-        if (precent > 1) {
-          process(to)
-          stopAnimate()
-          return
-        }
-
         // get current move distance
         const destination = normal
           ? from + precent * totalDistance
           : from + wobbly(precent) * totalDistance
 
         process(destination)
+
+        if (precent > 1) {
+          process(to)
+          stopAnimate()
+          return
+        }
         core()
       })
     }
@@ -187,7 +187,7 @@ const Wobbly = (() => {
       WobblyCore({
         move,
         duration,
-        end: () => {
+        end () {
           // next function will restart animation
           resolve(() => WobblyCore.move(move, duration, process))
         },

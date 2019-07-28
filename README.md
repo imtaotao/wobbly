@@ -41,7 +41,7 @@ Wobbly 用于创建一个动画对象，每个动画对象包含 5 个方法
     end () {
       console.log('end')
       animate.start()
-    }
+    },
   }, val => {
     node.style.transform = `translateX(${val}px)`
   })

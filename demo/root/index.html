@@ -7,10 +7,11 @@
       href='https://github.com/imtaotao/wobbly'
     >
     </a>
-    <!-- 侧边栏 -->
+
+    <!-- sideber -->
     <Sidebar :onToggleItem='this.onToggleItem' />
 
-    <!-- 主体内容 -->
+    <!-- main content -->
     <div styleName='main-box'>
       <WobblyCM v-if='currentAPI === "Wobbly"' />
       <WobblyAll v-if='currentAPI === "Wobbly.all"' />
