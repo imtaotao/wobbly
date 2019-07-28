@@ -93,18 +93,11 @@ module.exports = CSSModules(style)(
     }
 
     sourcecode (node) {
-      // restart animation
-      const callback = restart => {
-        return new Promise(resolve => {
-          setTimeout(() => resolve(restart()), 1000)
-        })
-      }
-
       wobbly.move([0, -720], 500, val => {
         node.style.transform = `rotateZ(${val}deg)`
       })
-      .then(callback)
-      .then(callback)
+      .then(restart => restart())
+      .then(restart => restart())
     }
   }
 )
