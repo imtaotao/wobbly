@@ -4,7 +4,7 @@ const Wobbly = (() => {
       throw TypeError('The parameter should be a number.')
     }
   }
-  
+
   const wobbly = t => -0.5 * Math.pow(2.71828, -6 * t) * (-2 * Math.pow(2.71828, 6 * t) + Math.sin(12 * t) + 2 * Math.cos(12 * t))
 
   const filterOpts = opts => {
@@ -18,7 +18,7 @@ const Wobbly = (() => {
     assert(to)
     assert(from)
     assert(duration)
-    
+
     return { to, from, end, normal, duration }
   }
 
@@ -157,7 +157,7 @@ const Wobbly = (() => {
       }
       endWrap._i = 0
     }
-    
+
     // create animates
     const animates = moves.map((move, i) => {
       return WobblyCore({
@@ -208,7 +208,7 @@ const Wobbly = (() => {
     const maxLength = Math.max(start.length, end.length)
     end.length < maxLength && end.push(1)
     start.length < maxLength && start.push(1)
-    
+
     return start.map((val, i) => [val, end[i]])
   }
 

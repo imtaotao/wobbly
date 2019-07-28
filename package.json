@@ -1,7 +1,7 @@
 {
   "name": "@rustle/wobbly",
-  "version": "0.0.4",
-  "description": "destinationFolder",
+  "version": "0.0.6",
+  "description": "A simple js animation library",
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
   "scripts": {
