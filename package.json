@@ -1,6 +1,6 @@
 {
   "name": "@rustle/wobbly",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "destinationFolder",
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
