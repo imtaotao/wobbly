@@ -1,5 +1,5 @@
 {
-  "name": "@rustle/wobbly1",
+  "name": "@rustle/wobbly",
   "version": "0.0.8",
   "description": "A simple js animation library",
   "main": "dist/wobbly.common.js",
