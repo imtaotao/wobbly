@@ -129,6 +129,11 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
   animate.start()
 ```
 
+
+## 结合 matrix 库
+当我们对 transform 做更改的时候，发现需要移动的元素已经存在 transform，那么我们就不能很轻易的去移动，如果通过 getComputedStyle 方法去获取当前元素的值，你会发现得到的是一些 matrix 值。所以我们可以利用 [matrix](https://github.com/imtaotao/matrix) 这个库来做计算
+
+
 [npm-url]: https://www.npmjs.com/package/@rustle/wobbly
 [npm-image]: https://img.shields.io/npm/v/@rustle/wobbly.svg?style=flat-square
 [cdn]: https://cdn.jsdelivr.net/gh/imtaotao/wobbly/dist/wobbly.min.js
