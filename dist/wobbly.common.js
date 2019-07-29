@@ -1,7 +1,7 @@
 const Wobbly = (() => {
   const assert = val => {
     if (typeof val !== 'number' || Number.isNaN(val)) {
-      throw TypeError('The parameter should be a number.')
+      throw TypeError('The "parameter" should be a number.')
     }
   }
 
@@ -73,6 +73,12 @@ const Wobbly = (() => {
         let precent = (Date.now() - startTime) / duration
         if (Number.isNaN(precent)) return
 
+        if (precent > 1) {
+          process(to)
+          stopAnimate()
+          return
+        }
+
         // get current move distance
         const destination = normal
           ? from + precent * totalDistance
@@ -80,11 +86,6 @@ const Wobbly = (() => {
 
         process(destination)
 
-        if (precent > 1) {
-          process(to)
-          stopAnimate()
-          return
-        }
         core()
       })
     }
@@ -135,7 +136,7 @@ const Wobbly = (() => {
     // we need index keep order of the data
     const processWrap = (currentIndex, des) => {
       processWrap._i++
-      processWrap._des[currentIndex] = (des)
+      processWrap._des[currentIndex] = des
       if (processWrap._i === moves.length) {
         process(processWrap._des)
         processWrap._i = 0
