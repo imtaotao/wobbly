@@ -3,6 +3,7 @@
 
 index.js
 build.js
+.babelrc
 
 demo/
 index.html

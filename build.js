@@ -1,63 +1,78 @@
 const fs = require('fs')
 const path = require('path')
+const rollup = require('rollup')
+const rm = require('rimraf').sync
+const babel = require('rollup-plugin-babel')
+const cmd = require('rollup-plugin-commonjs')
+const cleanup = require('rollup-plugin-cleanup')
+const resolve = require('rollup-plugin-node-resolve')
 
-const libName = 'wobbly'
-const entryFilePath = path.resolve('./index.js')
-const destinationFolder = path.resolve('./dist')
+const entryPath = path.resolve(__dirname, 'index.js')
+const outputPath = filename => path.resolve(__dirname, './dist', filename)
 
-const build = (sourcecode, type) => {
-  const filename = `${libName}.${type}.js`
-  const desPath = path.resolve(destinationFolder, filename)
-  
-  switch (type) {
-    case 'esm' :
-      sourcecode += '\nexport default Wobbly'
-      break
-    case 'common' :
-      sourcecode += '\nmodule.exports = Wobbly'
-      break
-    case 'min' :
-      sourcecode += '\nwindow.Wobbly = Wobbly'
-      break
+const esm = {
+  input: entryPath,
+  output: {
+    file: outputPath('wobbly.esm.js'),
+    format: 'es',
   }
+}
 
-  if (!fs.existsSync(destinationFolder)) {
-    fs.mkdirSync(destinationFolder)
+const umd = {
+  input: entryPath,
+  output: {
+    file: outputPath('wobbly.min.js'),
+    format: 'umd',
+    name: 'Wobbly',
   }
-
-  fs.writeFile(desPath, sourcecode, err => {
-    if (err) throw err
-    console.log(`Build success "${filename}".`)
-  })
 }
 
-const getSourceCode = () => {
-  return new Promise(resolve => {
-    if (fs.existsSync(entryFilePath)) {
-      fs.readFile(entryFilePath, (err, data) => {
-        if (err) throw err
-        resolve(data.toString())
-      })
-    }
-  })
+const cjs = {
+  input: entryPath,
+  output: {
+    file: outputPath('wobbly.common.js'),
+    format: 'cjs',
+  }
 }
 
-const start = () => {
-  getSourceCode(entryFilePath).then(sourcecode => {
-    build(sourcecode, 'esm')
-    build(sourcecode, 'min')
-    build(sourcecode, 'common')
+async function build (cfg, type, sourcemap = false) {
+  cfg.output.sourcemap = sourcemap
+
+  const bundle = await rollup.rollup({
+    input: cfg.input,
+    plugins: [
+      cleanup(),
+      resolve(),
+      babel({
+        babelrc: true,
+        exclude: 'node_modules/**',
+      }),
+      cmd(),
+    ]
   })
+  await bundle.generate(cfg.output)
+  await bundle.write(cfg.output)
 }
 
-start()
+console.clear()
+// delete old build files
+rm('./dist')
 
-// if need watch file
-let rebuildIndex = 0
+const buildVersion = sourcemap => {
+  build(esm, 'esm', sourcemap)
+  build(cjs, 'cjs', sourcemap)
+  build(umd, 'umd', sourcemap)
+}
+
+// watch, use in dev and test
 if (process.argv.includes('-w')) {
-  fs.watchFile(entryFilePath,  () => {
+  let i = 0
+  fs.watch('./index.js', () => {
     console.clear()
-    console.log(`rebuild... (${++rebuildIndex})`)
-    start()
+    console.log('Rebuild times: ' + ++i)
+    buildVersion(true)
   })
+  buildVersion(true)
+} else {
+  buildVersion()
 }

@@ -1,219 +1,288 @@
-const Wobbly = (() => {
-  const assert = val => {
-    if (typeof val !== 'number' || Number.isNaN(val)) {
-      throw TypeError('The "parameter" should be a number.')
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
     }
   }
 
-  const wobbly = t => -0.5 * Math.pow(2.71828, -6 * t) * (-2 * Math.pow(2.71828, 6 * t) + Math.sin(12 * t) + 2 * Math.cos(12 * t))
+  return _arr;
+}
 
-  const filterOpts = opts => {
-    const {
-      end,
-      duration,
-      normal = false,
-      move: [from, to],
-    } = opts
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
 
-    assert(to)
-    assert(from)
-    assert(duration)
+var assert = function assert(val) {
+  if (typeof val !== 'number' || Number.isNaN(val)) {
+    throw TypeError('The "parameter" should be a number.');
+  }
+};
 
-    return { to, from, end, normal, duration }
+var wobbly = function wobbly(t) {
+  return -0.5 * Math.pow(2.71828, -6 * t) * (-2 * Math.pow(2.71828, 6 * t) + Math.sin(12 * t) + 2 * Math.cos(12 * t));
+};
+
+var filterOpts = function filterOpts(opts) {
+  var end = opts.end,
+      duration = opts.duration,
+      _opts$normal = opts.normal,
+      normal = _opts$normal === void 0 ? false : _opts$normal,
+      _opts$move = _slicedToArray(opts.move, 2),
+      from = _opts$move[0],
+      to = _opts$move[1];
+
+  assert(to);
+  assert(from);
+  assert(duration);
+  return {
+    to: to,
+    from: from,
+    end: end,
+    normal: normal,
+    duration: duration
+  };
+};
+
+var hexToRgb = function hexToRgb(hex) {
+  if (!/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6}|[0-9a-fA-f]{8})$/.test(hex)) {
+    throw Error("the \"".concat(hex, "\" do not meet specifications."));
   }
 
-  const hexToRgb = hex => {
-    if (!/^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6}|[0-9a-fA-f]{8})$/.test(hex)) {
-      throw Error(`the "${hex}" do not meet specifications.`)
+  var rgba = [];
+  hex = hex.toLowerCase();
+
+  if (hex.length === 4) {
+    var regenerate = '#';
+
+    for (var i = 1; i < 4; i++) {
+      regenerate += hex.slice(i, i + 1).repeat(2);
     }
 
-    const rgba = []
-    hex = hex.toLowerCase()
+    hex = regenerate;
+  }
 
-    // if hex is #fff
-    if (hex.length === 4) {
-      let regenerate = '#'
-      for (let i = 1; i < 4; i++) {
-        regenerate += hex.slice(i, i + 1).repeat(2)
+  for (var j = 1; j < 7; j += 2) {
+    rgba.push(+('0x' + hex.slice(j, j + 2)));
+  }
+
+  if (hex.length === 9) {
+    rgba.push(+('0x' + hex.slice(7, 9)) / 255);
+  }
+
+  return rgba;
+};
+
+var Wobbly = function Wobbly(opts, process) {
+  var _filterOpts = filterOpts(opts),
+      to = _filterOpts.to,
+      from = _filterOpts.from,
+      end = _filterOpts.end,
+      normal = _filterOpts.normal,
+      duration = _filterOpts.duration;
+
+  typeof process !== 'function' && (process = function process() {});
+  var timerId = null;
+  var startTime = null;
+  var totalDistance = to - from;
+
+  var stopAnimate = function stopAnimate() {
+    startTime = null;
+
+    if (timerId) {
+      cancelAnimationFrame(timerId);
+      timerId = null;
+      typeof end === 'function' && end();
+    }
+  };
+
+  var core = function core() {
+    timerId = requestAnimationFrame(function () {
+      var precent = (Date.now() - startTime) / duration;
+      if (Number.isNaN(precent)) return;
+
+      if (precent > 1) {
+        process(to);
+        stopAnimate();
+        return;
       }
-      hex = regenerate
-    }
 
-    for (let j = 1; j < 7; j += 2) {
-      rgba.push(+('0x' + hex.slice(j, j + 2)))
-    }
+      var destination = normal ? from + precent * totalDistance : from + wobbly(precent) * totalDistance;
+      process(destination);
+      core();
+    });
+  };
 
-    if (hex.length === 9) {
-      rgba.push(+('0x' + hex.slice(7, 9)) / 255)
-    }
+  return {
+    start: function start() {
+      if (timerId === null) {
+        startTime = Date.now();
+        core();
+      }
 
-    return rgba
+      return this;
+    },
+    stop: function stop() {
+      stopAnimate();
+      return this;
+    },
+    reStart: function reStart() {
+      this.stop();
+      this.start();
+      return this;
+    },
+    toStart: function toStart() {
+      this.stop();
+      process(from);
+      return this;
+    },
+    toEnd: function toEnd() {
+      this.stop();
+      process(to);
+      return this;
+    }
+  };
+};
+
+Wobbly.all = function (_ref, process) {
+  var moves = _ref.moves,
+      duration = _ref.duration,
+      normal = _ref.normal,
+      end = _ref.end;
+
+  if (!Array.isArray(moves) || moves.length === 0) {
+    throw Error('The "moves" must be an array with one element.');
   }
 
-  // core function
-  const WobblyCore = (opts, process) => {
-    const { to, from, end, normal, duration } = filterOpts(opts)
-    typeof process !== 'function' && (process = () => {})
+  var processWrap = function processWrap(currentIndex, des) {
+    processWrap._i++;
+    processWrap._des[currentIndex] = des;
 
-    let timerId = null
-    let startTime = null
-    const totalDistance = to - from
-
-    const stopAnimate = () => {
-      startTime = null
-      if (timerId) {
-        cancelAnimationFrame(timerId)
-        timerId = null
-        typeof end === 'function' && end()
-      }
+    if (processWrap._i === moves.length) {
+      process(processWrap._des);
+      processWrap._i = 0;
+      processWrap._des = [];
     }
+  };
 
-    const core = () => {
-      timerId = requestAnimationFrame(() => {
-        let precent = (Date.now() - startTime) / duration
-        if (Number.isNaN(precent)) return
+  processWrap._i = 0;
+  processWrap._des = [];
+  var _endWrap = null;
 
-        if (precent > 1) {
-          process(to)
-          stopAnimate()
-          return
+  if (end) {
+    _endWrap = function endWrap() {
+      _endWrap._i++;
+
+      if (_endWrap._i === moves.length) {
+        _endWrap._i = 0;
+        end();
+      }
+    };
+
+    _endWrap._i = 0;
+  }
+
+  var animates = moves.map(function (move, i) {
+    return Wobbly({
+      move: move,
+      normal: normal,
+      duration: duration,
+      end: _endWrap
+    }, function (des) {
+      return processWrap(i, des);
+    });
+  });
+  var allApis = {};
+
+  var _loop = function _loop(key) {
+    allApis[key] = function () {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = animates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var animate = _step.value;
+          animate[key]();
         }
-
-        // get current move distance
-        const destination = normal
-          ? from + precent * totalDistance
-          : from + wobbly(precent) * totalDistance
-
-        process(destination)
-
-        core()
-      })
-    }
-
-    // return animate object
-    return {
-      // if we are doing animation, we don’t do anything
-      start () {
-        if (timerId === null) {
-          startTime = Date.now()
-          core()
-        }
-        return this
-      },
-
-      stop () {
-        stopAnimate()
-        return this
-      },
-
-      reStart() {
-        this.stop()
-        this.start()
-        return this
-      },
-
-      toStart() {
-        this.stop()
-        process(from)
-        return this
-      },
-
-      toEnd () {
-        this.stop()
-        process(to)
-        return this
-      }
-    }
-  }
-
-  // allow multiple animations at the same time 
-  WobblyCore.all = ({ moves, duration, normal, end }, process) => {
-    if (!Array.isArray(moves) || moves.length === 0) {
-      throw Error('The "moves" must be an array with one element.')
-    }
-
-    // process wrap function
-    // we need index keep order of the data
-    const processWrap = (currentIndex, des) => {
-      processWrap._i++
-      processWrap._des[currentIndex] = des
-      if (processWrap._i === moves.length) {
-        process(processWrap._des)
-        processWrap._i = 0
-        processWrap._des = []
-      }
-    }
-    processWrap._i = 0
-    processWrap._des = []
-
-    // end wrap function
-    let endWrap = null
-    if (end) {
-      endWrap = () => {
-        endWrap._i++
-        if (endWrap._i === moves.length) {
-          endWrap._i = 0
-          end()
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
-      endWrap._i = 0
-    }
 
-    // create animates
-    const animates = moves.map((move, i) => {
-      return WobblyCore({
-        move,
-        normal,
-        duration,
-        end: endWrap,
-      }, des => processWrap(i, des))
-    })
+      return this;
+    };
+  };
 
-    // create apis
-    const allApis = {}
-    for (const key in animates[0]) {
-      allApis[key] = function () {
-        for (const animate of animates) {
-          animate[key]()
-        }
-        return this
+  for (var key in animates[0]) {
+    _loop(key);
+  }
+
+  return allApis;
+};
+
+Wobbly.move = function (move, duration, process) {
+  return new Promise(function (resolve) {
+    Wobbly({
+      move: move,
+      duration: duration,
+      end: function end() {
+        resolve(function () {
+          return Wobbly.move(move, duration, process);
+        });
       }
-    }
-    return allApis
+    }, process).start();
+  });
+};
+
+Wobbly.color = function (start, end) {
+  if (typeof end === 'string') {
+    end = hexToRgb(end.trim());
   }
 
-  // simplified writing
-  WobblyCore.move = (move, duration, process) => {
-    return new Promise(resolve => {
-      WobblyCore({
-        move,
-        duration,
-        end () {
-          // next function will restart animation
-          resolve(() => WobblyCore.move(move, duration, process))
-        },
-      }, process).start()
-    })
+  if (typeof start === 'string') {
+    start = hexToRgb(start.trim());
   }
 
-  // conversion color value
-  WobblyCore.color = (start, end) => {
-    if (typeof end === 'string') {
-      end = hexToRgb(end.trim())
-    }
+  var maxLength = Math.max(start.length, end.length);
+  end.length < maxLength && end.push(1);
+  start.length < maxLength && start.push(1);
+  return start.map(function (val, i) {
+    return [val, end[i]];
+  });
+};
 
-    if (typeof start === 'string') {
-      start = hexToRgb(start.trim())
-    }
-
-    const maxLength = Math.max(start.length, end.length)
-    end.length < maxLength && end.push(1)
-    start.length < maxLength && start.push(1)
-
-    return start.map((val, i) => [val, end[i]])
-  }
-
-  return WobblyCore
-})()
-
-export default Wobbly
+export default Wobbly;

@@ -1,13 +1,14 @@
 {
   "name": "@rustle/wobbly",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A simple js animation library",
   "main": "dist/wobbly.common.js",
   "module": "dist/wobbly.esm.js",
   "scripts": {
     "demo": "http-server ./ -o",
-    "build": "node ./build.js -w",
-    "publish": "node ./build.js && npm version major"
+    "watch": "node ./build.js -w",
+    "build": "node ./build.js",
+    "publish": "npm version major"
   },
   "author": "imtaotao",
   "license": "ISC",
@@ -21,5 +22,15 @@
     "animation"
   ],
   "homepage": "https://github.com/imtaotao/wobbly",
-  "repository": "git@github.com:imtaotao/wobbly.git"
+  "repository": "git@github.com:imtaotao/wobbly.git",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-cleanup": "^3.1.1",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
 }
