@@ -35,7 +35,7 @@ const cjs = {
   }
 }
 
-async function build (cfg, type, sourcemap = false) {
+async function build (cfg, sourcemap = false) {
   cfg.output.sourcemap = sourcemap
 
   const bundle = await rollup.rollup({
@@ -59,9 +59,9 @@ console.clear()
 rm('./dist')
 
 const buildVersion = sourcemap => {
-  build(esm, 'esm', sourcemap)
-  build(cjs, 'cjs', sourcemap)
-  build(umd, 'umd', sourcemap)
+  build(esm, sourcemap)
+  build(cjs, sourcemap)
+  build(umd, sourcemap)
 }
 
 // watch, use in dev and test
