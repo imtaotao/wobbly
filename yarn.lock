@@ -638,11 +638,6 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@rustle/wobbly@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@rustle/wobbly/-/wobbly-0.0.9.tgz#126692100444a45734546a4fb79b54e0f702b4ca"
-  integrity sha512-rqu2lw/0ggQHcoWISfYVw9B3sSOBaFqTL2lrqL7c4xXH5fI6W063LChp09AjBLQhMBRc3RKOKvIsMaFVz/+7Sg==
-
 "@types/estree@0.0.39":
   version "0.0.39"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
@@ -924,9 +919,9 @@ minimatch@^3.0.4:
     brace-expansion "^1.1.7"
 
 minimist@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
-  integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
+  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
 ms@^2.1.1:
   version "2.1.2"
