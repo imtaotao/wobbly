@@ -92,7 +92,7 @@ const Wobbly = (opts, process) => {
   // return animate object
   return {
     // if we are doing animation, we don’t do anything
-    start () {
+    start() {
       if (timerId === null) {
         startTime = Date.now()
         core()
@@ -100,7 +100,7 @@ const Wobbly = (opts, process) => {
       return this
     },
 
-    stop () {
+    stop() {
       stopAnimate()
       return this
     },
@@ -117,12 +117,64 @@ const Wobbly = (opts, process) => {
       return this
     },
 
-    toEnd () {
+    toEnd() {
       this.stop()
       process(to)
       return this
     }
   }
+}
+
+// export frame list data
+Wobbly.export = (opts, ticker = 17) => {
+  assert(ticker)
+  let i = 0
+  let precent = 0
+  let cacheArray = null
+
+  const { to, from, normal, duration } = filterOpts(opts)
+  const totalDistance = to - from
+  const frames = {}
+  const res = {
+    ticker,
+    frames,
+    length: 0,
+
+    clearCache(newVal) {
+      cacheArray = newVal || null
+    },
+
+    toArray(cache) {
+      if (cacheArray !== null) {
+        return cacheArray
+      }
+      const array = []
+      for (const key in this.frames) {
+        array.push([key, this.frames[key]])
+      }
+      if (cache) {
+        cacheArray = array
+      }
+      return array
+    },
+  }
+
+  while(precent <= 1) {
+    res.length++
+    const frame = i++ * ticker
+    precent = frame / duration
+    if (precent > 1) {
+      if (frames[duration] === undefined) {
+        frames[duration] = to
+      }
+      break
+    }
+
+    frames[frame] = normal
+      ? from + precent * totalDistance
+      : from + wobbly(precent) * totalDistance
+  }
+  return res
 }
 
 // allow multiple animations at the same time 
@@ -187,7 +239,7 @@ Wobbly.move = (move, duration, process) => {
     Wobbly({
       move,
       duration,
-      end () {
+      end() {
         // next function will restart animation
         resolve(() => Wobbly.move(move, duration, process))
       },

@@ -169,6 +169,66 @@ var Wobbly = function Wobbly(opts, process) {
   };
 };
 
+Wobbly["export"] = function (opts) {
+  var ticker = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 17;
+  assert(ticker);
+  var i = 0;
+  var precent = 0;
+  var cacheArray = null;
+
+  var _filterOpts2 = filterOpts(opts),
+      to = _filterOpts2.to,
+      from = _filterOpts2.from,
+      normal = _filterOpts2.normal,
+      duration = _filterOpts2.duration;
+
+  var totalDistance = to - from;
+  var frames = {};
+  var res = {
+    ticker: ticker,
+    frames: frames,
+    length: 0,
+    clearCache: function clearCache(newVal) {
+      cacheArray = newVal || null;
+    },
+    toArray: function toArray(cache) {
+      if (cacheArray !== null) {
+        return cacheArray;
+      }
+
+      var array = [];
+
+      for (var key in this.frames) {
+        array.push([key, this.frames[key]]);
+      }
+
+      if (cache) {
+        cacheArray = array;
+      }
+
+      return array;
+    }
+  };
+
+  while (precent <= 1) {
+    res.length++;
+    var frame = i++ * ticker;
+    precent = frame / duration;
+
+    if (precent > 1) {
+      if (frames[duration] === undefined) {
+        frames[duration] = to;
+      }
+
+      break;
+    }
+
+    frames[frame] = normal ? from + precent * totalDistance : from + wobbly(precent) * totalDistance;
+  }
+
+  return res;
+};
+
 Wobbly.all = function (_ref, process) {
   var moves = _ref.moves,
       duration = _ref.duration,
