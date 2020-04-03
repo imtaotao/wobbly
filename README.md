@@ -129,8 +129,8 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
   animate.start()
 ```
 
-### Wobbly.export(options: Object, tiker: number) : frameObject
-Wobbly.export 可以用来导出帧序列，我们可以讲动画的逻辑抽离出来保存为一个状态，如果你需要，甚至可以将这状态持久保存在数据库中，用于各端。
+### Wobbly.export(options: Object, ticker: number) : frameObject
+Wobbly.export 可以用来导出帧序列，我们可以将动画的逻辑抽离出来保存为一个状态，如果你需要，甚至可以将这状态持久保存在数据库中，用于各端。
 ```js
 const frameObject = Wobbly.export({
   move: [0, 356],
