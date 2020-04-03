@@ -129,6 +129,21 @@ Wobbly.all 将同时执行多个动画，allOptions 和 Wobbly 函数中的 opti
   animate.start()
 ```
 
+### Wobbly.export(options: Object, tiker: number) : frameObject
+Wobbly.export 可以用来导出帧序列，我们可以讲动画的逻辑抽离出来保存为一个状态，如果你需要，甚至可以将这状态持久保存在数据库中，用于各端。
+```js
+const frameObject = Wobbly.export({
+  move: [0, 356],
+  duration: 1000,
+})
+
+```
+frameObject
+  +  `ticker`： 相邻帧的间隔时间
+  +  `length`： 总共有多少帧
+  +  `frames`： 每一帧的数据，为一个 { key: value } 的结构
+  +  `toArray`： 将 frames 转为 array，如果指定了缓存，则会缓存 array，`frameObject.toArray(true)`
+  +  `clearCache`： 如果使用 toArray 方法是，指定了缓存，可以用此方法清除缓存
 
 ## 结合 [matrix](https://github.com/imtaotao/matrix) 库
 当我们对 transform 做更改的时候，发现需要移动的元素已经存在 transform，那么我们就不能很轻易的去移动，如果通过 getComputedStyle 方法去获取当前元素的值，你会发现得到的是一些 matrix 值。所以我们可以利用 [matrix](https://github.com/imtaotao/matrix) 这个库来做计算
